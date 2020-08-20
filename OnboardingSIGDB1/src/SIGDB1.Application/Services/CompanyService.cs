@@ -42,8 +42,8 @@ namespace SIGDB1.Application.Services
             if (!filter.Cnpj.IsEmpty())
                 query = query.Where(comp => comp.Cnpj.IsEquals(filter.Cnpj.OnlyNumbers()));
 
-            if (filter.Fundation.HasValue)
-                query = query.Where(comp => comp.Fundation.Value.Date == filter.Fundation.Value.Date);
+            if (!filter.Fundation.IsEmpty())
+                query = query.Where(comp => comp.Fundation.HasValue && comp.Fundation.Value.Date == filter.Fundation.ToDate());
 
             if (!query.Any())
                 return null;
@@ -73,7 +73,7 @@ namespace SIGDB1.Application.Services
                 var entity = _mapper.Map<Company>(companyDto);
                 entity.ChangeName(companyDto.Name);
                 entity.ChangeCnpj(companyDto.Cnpj);
-                entity.AlterDateFundation(companyDto.Fundation);
+                entity.AlterDateFundation(companyDto.Fundation.ToDate());
 
                 await _companyRepository.Update(entity);
 

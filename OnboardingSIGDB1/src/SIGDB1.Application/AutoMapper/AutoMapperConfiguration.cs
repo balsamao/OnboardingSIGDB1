@@ -18,14 +18,17 @@ namespace SIGDB1.Application.AutoMapper
             CreateMap<Role, GetRoleDto>();
 
             CreateMap<CreateCompanyDto, Company>()
-                .ConstructUsing(p => new Company(p.Name, p.Cnpj.OnlyNumbers(), p.Fundation))
+                .ConstructUsing(p => new Company(p.Name, p.Cnpj.OnlyNumbers(), p.Fundation.ToDate()))
+                .ForMember(entity => entity.Fundation, opt => opt.MapFrom(dto => dto.Fundation.ToDate()))
                 .ForMember(entity => entity.Cnpj, opt => opt.MapFrom(dto => dto.Cnpj.OnlyNumbers()));
 
             CreateMap<UpdateCompanyDto, Company>()
-                .ConstructUsing(p => new Company(p.Name, p.Cnpj.OnlyNumbers(), p.Fundation))
+                .ConstructUsing(p => new Company(p.Name, p.Cnpj.OnlyNumbers(), p.Fundation.ToDate()))
+                .ForMember(entity => entity.Fundation, opt => opt.MapFrom(dto => dto.Fundation.ToDate()))
                 .ForMember(entity => entity.Cnpj, opt => opt.MapFrom(dto => dto.Cnpj.OnlyNumbers()));
 
-            CreateMap<Company, GetCompanyDto>();
+            CreateMap<Company, GetCompanyDto>()
+                .ForMember(dto => dto.Fundation, opt => opt.MapFrom(entity => entity.Fundation.HasValue ? entity.Fundation.Value.ToString("dd/MM/yyyy") : ""));
 
             CreateMap<CreateEmployeeDto, Employee>()
                 .ConstructUsing(p => new Employee(p.Name, p.Cpf))
@@ -37,7 +40,8 @@ namespace SIGDB1.Application.AutoMapper
 
             CreateMap<Employee, GetEmployeeDto>()
                 .ForMember(dto => dto.CompanyName, opt => opt.MapFrom(entity => entity.Company != null ? entity.Company.Name : ""))
-                .ForMember(dto => dto.RoleName, opt => opt.MapFrom(entity => entity.Role != null ? entity.Role.Description : ""));
+                .ForMember(dto => dto.RoleName, opt => opt.MapFrom(entity => entity.Role != null ? entity.Role.Description : ""))
+                .ForMember(dto => dto.Hiring, opt => opt.MapFrom(entity => entity.Hiring.HasValue ? entity.Hiring.Value.ToString("dd/MM/yyyy") : ""));
         }
     }
 }

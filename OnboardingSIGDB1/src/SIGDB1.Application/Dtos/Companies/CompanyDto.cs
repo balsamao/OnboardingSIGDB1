@@ -8,6 +8,6 @@ namespace SIGDB1.Application.Dtos
 
         public string Cnpj { get; set; }
 
-        public DateTime? Fundation { get; set; }
+        public string Fundation { get; set; }
     }
 }

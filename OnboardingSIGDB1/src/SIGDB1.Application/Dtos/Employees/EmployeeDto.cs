@@ -8,6 +8,6 @@ namespace SIGDB1.Application.Dtos
 
         public string Cpf { get; set; }
 
-        public DateTime? Hiring { get; set; }
+        public string Hiring { get; set; }
     }
 }

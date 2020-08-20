@@ -42,8 +42,8 @@ namespace SIGDB1.Application.Services
             if (!filter.Cpf.IsEmpty())
                 query = query.Where(emp => emp.Cpf.IsEquals(filter.Cpf.OnlyNumbers()));
 
-            if (filter.Hiring.HasValue)
-                query = query.Where(emp => emp.Hiring.Value.Date == filter.Hiring.Value.Date);
+            if (!filter.Hiring.IsEmpty())
+                query = query.Where(emp => emp.Hiring.HasValue && emp.Hiring.Value.Date == filter.Hiring.ToDate());
 
             if (!query.Any())
                 return null;
@@ -74,7 +74,7 @@ namespace SIGDB1.Application.Services
                 var entity = _mapper.Map<Employee>(employeeDto);
 
                 if (employeeDto.CompanyId != 0)
-                    entity.AssociateCompany(employeeDto.CompanyId, employeeDto.Hiring);
+                    entity.AssociateCompany(employeeDto.CompanyId, employeeDto.Hiring.ToDate());
 
                 if (employeeDto.RoleId != 0)
                     entity.StartNewPosition(employeeDto.RoleId);
