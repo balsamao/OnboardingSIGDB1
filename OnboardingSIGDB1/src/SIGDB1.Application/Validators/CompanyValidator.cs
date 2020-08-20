@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation.Validators;
 using SIGDB1.Application.Dtos;
 using SIGDB1.Core.Extensions;
 using SIGDB1.Domain.Repositories;
@@ -23,6 +24,21 @@ namespace SIGDB1.Application.Validators
             RuleFor(x => x.Cnpj)
                 .Must(cnpj => cnpj.OnlyNumbers().IsEmpty() == false)
                 .WithMessage("CNPJ is required.");
+
+            When(x => !x.Cnpj.IsEmpty(), () => {
+                RuleFor(x => x.Cnpj).Must(ValidarCnpj).WithMessage("CNPJ invalid.");
+            });
+        }
+
+        private bool ValidarCnpj(CompanyDto companyDto, string cnpj, PropertyValidatorContext ctx)
+        {
+            if (cnpj.OnlyNumbers().Length < 14)
+                return false;
+
+            if (cnpj.IsEquals(cnpj.ElementAt(0).ToString().PadLeft(14, cnpj.ElementAt(0))))
+                return false;
+
+            return true;
         }
 
         public async Task<ValidationResult> CreateValidate(CreateCompanyDto companyDto)

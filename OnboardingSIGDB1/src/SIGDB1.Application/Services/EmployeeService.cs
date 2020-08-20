@@ -37,10 +37,10 @@ namespace SIGDB1.Application.Services
                 query = query.Where(emp => emp.Id == filter.Id);
 
             if (!filter.Name.IsEmpty())
-                query = query.Where(emp => emp.Name.IsEquals(filter.Name));
+                query = query.Where(emp => emp.Name.Like(filter.Name));
 
             if (!filter.Cpf.IsEmpty())
-                query = query.Where(emp => emp.Cpf.IsEquals(filter.Cpf.OnlyNumbers()));
+                query = query.Where(emp => emp.Cpf.Like(filter.Cpf.OnlyNumbers()));
 
             if (!filter.Hiring.IsEmpty())
                 query = query.Where(emp => emp.Hiring.HasValue && emp.Hiring.Value.Date == filter.Hiring.ToDate());

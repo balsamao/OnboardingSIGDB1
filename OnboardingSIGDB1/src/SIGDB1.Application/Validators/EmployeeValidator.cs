@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using FluentValidation.Validators;
 using SIGDB1.Application.Dtos;
 using SIGDB1.Core.Extensions;
 using SIGDB1.Domain.Repositories;
@@ -23,6 +24,21 @@ namespace SIGDB1.Application.Validators
             RuleFor(x => x.Cpf)
                 .Must(cpf => cpf.OnlyNumbers().IsEmpty() == false)
                 .WithMessage("CPF is required.");
+
+            When(x => !x.Cpf.IsEmpty(), () => {
+                RuleFor(x => x.Cpf).Must(ValidarCpf).WithMessage("CPF invalid.");
+            });
+        }
+
+        private bool ValidarCpf(EmployeeDto employeeDto, string cpf, PropertyValidatorContext ctx)
+        {
+            if (cpf.OnlyNumbers().Length < 11)
+                return false;
+
+            if (cpf.IsEquals(cpf.ElementAt(0).ToString().PadLeft(11, cpf.ElementAt(0))))
+                return false;
+
+            return true;
         }
 
         public async Task<ValidationResult> CreateValidate(CreateEmployeeDto employeeDto)

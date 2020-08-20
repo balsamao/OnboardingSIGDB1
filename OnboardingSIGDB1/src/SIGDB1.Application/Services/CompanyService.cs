@@ -37,10 +37,10 @@ namespace SIGDB1.Application.Services
                 query = query.Where(comp => comp.Id == filter.Id);
 
             if (!filter.Name.IsEmpty())
-                query = query.Where(comp => comp.Name.IsEquals(filter.Name));
+                query = query.Where(comp => comp.Name.Like(filter.Name));
 
             if (!filter.Cnpj.IsEmpty())
-                query = query.Where(comp => comp.Cnpj.IsEquals(filter.Cnpj.OnlyNumbers()));
+                query = query.Where(comp => comp.Cnpj.Like(filter.Cnpj.OnlyNumbers()));
 
             if (!filter.Fundation.IsEmpty())
                 query = query.Where(comp => comp.Fundation.HasValue && comp.Fundation.Value.Date == filter.Fundation.ToDate());

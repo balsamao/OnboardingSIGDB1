@@ -37,7 +37,7 @@ namespace SIGDB1.Application.Services
                 query = query.Where(rol => rol.Id == filter.Id);
 
             if (!filter.Description.IsEmpty())
-                query = query.Where(rol => rol.Description.IsEquals(filter.Description));
+                query = query.Where(rol => rol.Description.Like(filter.Description));
 
             if (!query.Any())
                 return null;
