@@ -73,6 +73,8 @@ namespace SIGDB1.Application.Validators
                 validations.Errors.Add(new ValidationFailure("Error", "Name must be unique."));
             if (query.Any(employee => employee.Cpf.IsEquals(employeeDto.Cpf.OnlyNumbers()) && employee.Id != employeeId))
                 validations.Errors.Add(new ValidationFailure("Error", "CPF must be unique."));
+            if (employeeDto.CompanyId > 0 && employeeDto.Hiring.IsEmpty())
+                validations.Errors.Add(new ValidationFailure("Error", "Hiring is required."));
             if (employeeDto.RoleId > 0 && (!employeeDto.CompanyId.HasValue || employeeDto.CompanyId == 0))
                 validations.Errors.Add(new ValidationFailure("Error", "CompanyId is required."));
 
